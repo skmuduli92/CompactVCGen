@@ -10,20 +10,16 @@ object Main {
     val c = Lit(2);
     val d = Lit(3);
 
-    val ivar = IntVar("x")
-    val assgnStmt = Assign(ivar, Lit(20))
-    Interpreter.addStmt(assgnStmt)
+    val rel = Equal(Add(a, b), Lit(30))
+    println(rel.toString)
 
-    val ex = Div(Mul(Add(a, b), c), ivar);
-    val assgnStmt2 = Assign(ivar, ex)
-    Interpreter.addStmt(assgnStmt2)
+    val varX = IntVar("x")
+    val thenBody = Assign(varX, c);
+    val elseBody = Assign(varX, d);
+    val ifStmt = IfStmt(Not(rel), List(thenBody), List(elseBody))
 
-    println(assgnStmt.toString)
-    println(assgnStmt2.toString)
+    Interpreter.executeStmt(ifStmt);
+    println(varX.toString + " = " + Interpreter.valueOf(varX))
 
-    Interpreter.evalAssign(assgnStmt)
-    Interpreter.evalAssign(assgnStmt2)
-
-    println("x = " + Interpreter.valueOf(ivar))
   }
 }

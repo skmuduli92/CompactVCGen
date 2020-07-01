@@ -12,29 +12,56 @@ object Interpreter {
     program = program ++ List(stmt)
   }
 
+  // evaluate Boolean Expression
+  def evalBoolExpr(expr: Expr[Boolean]) : Boolean = expr match {
+    case Lesser(left, right) => evalIntExpr(left) < evalIntExpr(right)
+    case Greater(left, right) => evalIntExpr(left) > evalIntExpr(right)
+    case Equal (left, right) => evalIntExpr(left) == evalIntExpr(right)
+    case GEq (left, right) => evalIntExpr(left) >= evalIntExpr(right)
+    case LEq (left, right) => evalIntExpr(left) <= evalIntExpr(right)
+
+    case And(left, right) => evalBoolExpr(left) && evalBoolExpr(right)
+    case Or(left, right) => evalBoolExpr(left) || evalBoolExpr(right)
+    case Not(expr) => !evalBoolExpr(expr)
+  }
+
   // evaluate Integer expressions
-  def evalExpr(expr: Expr[Int]): Int = expr match {
+  def evalIntExpr(expr: Expr[Int]): Int = expr match {
     case Lit(value) => value
-    case IntVar(name) => evalExpr(SymbolTable(name))
-    case Add(left, right) => evalExpr(left) + evalExpr(right)
-    case Sub(left, right) => evalExpr(left) - evalExpr(right)
-    case Mul(left, right) => evalExpr(left) * evalExpr(right)
-    case Div(left, right) => evalExpr(left) / evalExpr(right)
+    case IntVar(name) => evalIntExpr(SymbolTable(name))
+    case Add(left, right) => evalIntExpr(left) + evalIntExpr(right)
+    case Sub(left, right) => evalIntExpr(left) - evalIntExpr(right)
+    case Mul(left, right) => evalIntExpr(left) * evalIntExpr(right)
+    case Div(left, right) => evalIntExpr(left) / evalIntExpr(right)
   }
 
   // evaluate Boolean expressions
 
   def evalAssign(assign: Assign) = {
-    SymbolTable = SymbolTable + (assign.varname -> Lit(evalExpr(assign.right)))
+    SymbolTable = SymbolTable + (assign.varname -> Lit(evalIntExpr(assign.right)))
   }
 
-  def execute = {
+  def evalIfStmt(ifStmt: IfStmt): Unit = {
+    val condVal = evalBoolExpr(ifStmt.cond)
+    if(condVal) {
+      ifStmt.ifTrue.foreach(stmt => executeStmt(stmt))
+    } else {
+      ifStmt.ifElse.foreach(stmt => executeStmt(stmt))
+    }
+  }
+
+  def executeStmt(stmt: Stmt): Unit = stmt match {
+    case assign: Assign => evalAssign(assign)
+    case ifStmt: IfStmt => evalIfStmt(ifStmt)
+  }
+
+  def execute: Unit = {
     program.foreach( stmt => stmt match {
       case assign: Assign => evalAssign(assign)
       case _ => Nil
     })
   }
 
-  def valueOf(intVar: IntVar) = evalExpr(SymbolTable(intVar.name))
+  def valueOf(intVar: IntVar) = evalIntExpr(SymbolTable(intVar.name))
 
 }

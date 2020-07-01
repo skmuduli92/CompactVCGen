@@ -44,8 +44,39 @@ case class Assign(intVar: IntVar, right: Expr[Int]) extends Stmt {
 
 // -- Binary Logic Operators --
 
+case class And(left : Expr[Boolean], right: Expr[Boolean]) extends Expr[Boolean] {
+  override def toString: String = "( " + left.toString + " && " + right.toString + " )"
+}
+
+case class Or(left : Expr[Boolean], right: Expr[Boolean]) extends Expr[Boolean] {
+  override def toString: String = "( " + left.toString + " || " + right.toString + " )"
+}
+
+case class Not(left : Expr[Boolean]) extends Expr[Boolean] {
+  override def toString: String = "( ~" + left.toString + " )"
+}
+
 // -- Relational Operators --
 
+case class Equal(left: Expr[Int], right: Expr[Int]) extends Expr[Boolean] {
+  override def toString: String = "( " + left.toString + " == " + right.toString + " )"
+}
+
+case class Lesser(left: Expr[Int], right: Expr[Int]) extends Expr[Boolean] {
+  override def toString: String = "( " + left.toString + " < " + right.toString + " )"
+}
+
+case class Greater(left: Expr[Int], right: Expr[Int]) extends Expr[Boolean] {
+  override def toString: String = "( " + left.toString + " > " + right.toString + " )"
+}
+
+case class GEq(left: Expr[Int], right: Expr[Int]) extends Expr[Boolean] {
+  override def toString: String = "( " + left.toString + " >= " + right.toString + " )"
+}
+
+case class LEq(left: Expr[Int], right: Expr[Int]) extends Expr[Boolean] {
+  override def toString: String = "( " + left.toString + " <= " + right.toString + " )"
+}
 
 
 
