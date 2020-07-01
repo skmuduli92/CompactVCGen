@@ -27,16 +27,15 @@ object Main {
     Interpreter.executeStmt(ifStmt);
     println(varX.toString + " = " + Interpreter.valueOf(varX))
 
-
-
     /*
 
-    while(x < 20 {
+    x := 1;
+    while(x < 20) {
       x := x + 1;
     }
      */
 
-    val whileCond = Lesser(varX, b)
+    val whileCond = Lesser(varX, a)
     val whileBody = AssignStmt(varX, Add(varX, Lit(1)))
     val whileStmt = WhileStmt(whileCond, List(whileBody))
 
