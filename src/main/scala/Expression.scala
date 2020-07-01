@@ -1,8 +1,7 @@
 
 package gcmdlang;
 
-trait Node;
-trait Stmt extends Node;
+
 trait Expr[T] extends Node;
 
 case class IntVar(name : String) extends Expr[Int] {
@@ -35,11 +34,6 @@ case class Mul(left: Expr[Int], right: Expr[Int]) extends Expr[Int] {
 
 case class Div(left: Expr[Int], right: Expr[Int]) extends Expr[Int] {
   override def toString: String = "( " + left.toString + " / " + right.toString + " )"
-}
-
-case class Assign(intVar: IntVar, right: Expr[Int]) extends Stmt {
-  def varname: String = intVar.name
-  override def toString: String = intVar.name + " := " + right.toString
 }
 
 // -- Binary Logic Operators --

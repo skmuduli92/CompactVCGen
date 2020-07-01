@@ -14,8 +14,8 @@ object Main {
     println(rel.toString)
 
     val varX = IntVar("x")
-    val thenBody = Assign(varX, c);
-    val elseBody = Assign(varX, d);
+    val thenBody = AssignStmt(varX, c);
+    val elseBody = AssignStmt(varX, d);
     val ifStmt = IfStmt(Not(rel), List(thenBody), List(elseBody))
 
     Interpreter.executeStmt(ifStmt);

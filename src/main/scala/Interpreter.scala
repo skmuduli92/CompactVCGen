@@ -37,7 +37,7 @@ object Interpreter {
 
   // evaluate Boolean expressions
 
-  def evalAssign(assign: Assign) = {
+  def evalAssignStmt(assign: AssignStmt) = {
     SymbolTable = SymbolTable + (assign.varname -> Lit(evalIntExpr(assign.right)))
   }
 
@@ -51,13 +51,13 @@ object Interpreter {
   }
 
   def executeStmt(stmt: Stmt): Unit = stmt match {
-    case assign: Assign => evalAssign(assign)
+    case assign: AssignStmt => evalAssignStmt(assign)
     case ifStmt: IfStmt => evalIfStmt(ifStmt)
   }
 
   def execute: Unit = {
     program.foreach( stmt => stmt match {
-      case assign: Assign => evalAssign(assign)
+      case assign: AssignStmt => evalAssignStmt(assign)
       case _ => Nil
     })
   }
