@@ -11,3 +11,4 @@ case class AssignStmt(intVar: IntVar, right: Expr[Int]) extends Stmt {
 
 case class IfStmt(cond : Expr[Boolean], ifTrue : List[Stmt], ifElse : List[Stmt]) extends Stmt
 
+case class WhileStmt(cond : Expr[Boolean], whileBody : List[Stmt]) extends Stmt

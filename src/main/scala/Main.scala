@@ -21,5 +21,12 @@ object Main {
     Interpreter.executeStmt(ifStmt);
     println(varX.toString + " = " + Interpreter.valueOf(varX))
 
+    val whileCond = Lesser(varX, b)
+    val whileBody = AssignStmt(varX, Add(varX, Lit(1)))
+    val whileStmt = WhileStmt(whileCond, List(whileBody))
+
+    Interpreter.executeStmt(whileStmt)
+    println(varX.toString + " = " + Interpreter.valueOf(varX))
+
   }
 }

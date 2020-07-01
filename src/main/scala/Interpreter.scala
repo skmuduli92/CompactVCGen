@@ -50,9 +50,16 @@ object Interpreter {
     }
   }
 
+  def evalWhileStmt(whileStmt: WhileStmt) : Unit = {
+    while(evalBoolExpr(whileStmt.cond)) {
+      whileStmt.whileBody.foreach(stmt => executeStmt(stmt))
+    }
+  }
+
   def executeStmt(stmt: Stmt): Unit = stmt match {
     case assign: AssignStmt => evalAssignStmt(assign)
     case ifStmt: IfStmt => evalIfStmt(ifStmt)
+    case whileStmt: WhileStmt => evalWhileStmt(whileStmt)
   }
 
   def execute: Unit = {
