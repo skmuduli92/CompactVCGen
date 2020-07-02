@@ -41,6 +41,10 @@ object Interpreter {
     SymbolTable = SymbolTable + (assign.varname -> Lit(evalIntExpr(assign.right)))
   }
 
+  def evalVarDeclStmt(declStmt: VarDeclStmt) = {
+    SymbolTable = SymbolTable + (declStmt.varname -> Lit(0))
+  }
+
   def evalIfStmt(ifStmt: IfStmt): Unit = {
     val condVal = evalBoolExpr(ifStmt.cond)
     if(condVal) {
