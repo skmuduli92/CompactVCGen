@@ -12,13 +12,11 @@ case class Lit[T](value : T) extends Expr[T] {
   override def toString: String = value.toString
 }
 
-// -- Unary Operators --
+// -- Arithmetic Operators --
+
 case class Neg(expr: Expr[Int]) extends Expr[Int] {
   override def toString: String = "-" + expr.toString
 }
-
-
-// -- Binary Arithmetic Operators --
 
 case class Add(left: Expr[Int], right: Expr[Int]) extends Expr[Int] {
   override def toString: String = "( " + left.toString + " + " + right.toString + " )"
@@ -36,7 +34,7 @@ case class Div(left: Expr[Int], right: Expr[Int]) extends Expr[Int] {
   override def toString: String = "( " + left.toString + " / " + right.toString + " )"
 }
 
-// -- Binary Logic Operators --
+// -- Logic Operators --
 
 case class And(left : Expr[Boolean], right: Expr[Boolean]) extends Expr[Boolean] {
   override def toString: String = "( " + left.toString + " && " + right.toString + " )"

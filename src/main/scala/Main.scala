@@ -28,11 +28,10 @@ object Main {
     println(varX.toString + " = " + Interpreter.valueOf(varX))
 
     /*
-
-    x := 1;
-    while(x < 20) {
-      x := x + 1;
-    }
+        x := 1;
+        while(x < 20) {
+          x := x + 1;
+        }
      */
 
     val whileCond = Lesser(varX, a)

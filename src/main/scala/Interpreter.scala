@@ -63,10 +63,7 @@ object Interpreter {
   }
 
   def execute: Unit = {
-    program.foreach( stmt => stmt match {
-      case assign: AssignStmt => evalAssignStmt(assign)
-      case _ => Nil
-    })
+    program.foreach( stmt => executeStmt(stmt))
   }
 
   def valueOf(intVar: IntVar) = evalIntExpr(SymbolTable(intVar.name))
