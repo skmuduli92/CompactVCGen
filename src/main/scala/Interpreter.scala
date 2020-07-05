@@ -50,7 +50,7 @@ object Interpreter {
     if(condVal) {
       ifStmt.ifTrue.foreach(stmt => executeStmt(stmt))
     } else {
-      ifStmt.ifElse.foreach(stmt => executeStmt(stmt))
+      ifStmt.ifFalse.foreach(stmt => executeStmt(stmt))
     }
   }
 

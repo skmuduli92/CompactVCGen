@@ -45,7 +45,7 @@ case class Or(left : Expr[Boolean], right: Expr[Boolean]) extends Expr[Boolean] 
 }
 
 case class Not(left : Expr[Boolean]) extends Expr[Boolean] {
-  override def toString: String = "( ~" + left.toString + " )"
+  override def toString: String = "~(" + left.toString + ")"
 }
 
 // -- Relational Operators --

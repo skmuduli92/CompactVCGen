@@ -27,20 +27,7 @@ object Main {
     Interpreter.executeStmt(ifStmt);
     println(varX.toString + " = " + Interpreter.valueOf(varX))
 
-    /*
-        x := 1;
-        while(x < 20) {
-          x := x + 1;
-        }
-     */
-
-    val whileCond = Lesser(varX, a)
-    val whileBody = AssignStmt(varX, Add(varX, Lit(1)))
-    val whileStmt = WhileStmt(whileCond, List(whileBody))
-
-    Interpreter.executeStmt(AssignStmt(varX, Lit(0)))
-    Interpreter.executeStmt(whileStmt)
-    println(varX.toString + " = " + Interpreter.valueOf(varX))
-
+    val cmdIR = CommandIR.transform(List(ifStmt))
+    println(cmdIR.toString)
   }
 }
