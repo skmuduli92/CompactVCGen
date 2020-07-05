@@ -51,7 +51,7 @@ object PassiveIRPass {
     val newVersion = versionMap(assignStmt.varname) + 1
     val freshVar = versionVar(assignStmt.varname, newVersion)
     val newversionMap = versionMap + (assignStmt.varname -> newVersion)
-    val newExpr = updateIntExpr(assignStmt.right, versionMap)
+    val newExpr = updateIntExpr(assignStmt.right, newversionMap)
     (AssignStmt(freshVar, newExpr), newversionMap)
   }
 
@@ -72,7 +72,12 @@ object PassiveIRPass {
   }
 
   def passifyNonDetStmt(nonDet: NonDet, versionMap: Map[String, Int]) : (NonDet, Map[String, Int]) = {
-    (nonDet, versionMap)
+    val (firstList, firstMap) = passifyStmtList(nonDet.first, versionMap)
+    val (secondList, secondMap) = passifyStmtList(nonDet.second, firstMap)
+    // TODO:
+    //  1. Find diff map for first and second map
+    //  2. update firstList and secondList accordingly
+    (NonDet(firstList, secondList), secondMap)
   }
 
 
