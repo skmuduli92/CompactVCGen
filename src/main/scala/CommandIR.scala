@@ -13,7 +13,7 @@ object CommandIR {
       case assertStmt: AssertStmt => assertStmt
       case whileStmt: WhileStmt => whileStmt
       case assignStmt: AssignStmt => assignStmt
-      case nonDet: NonDet => nonDet
+      case nonDet: NonDet => nonDet 
     })
   }
 }
