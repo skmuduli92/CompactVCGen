@@ -3,7 +3,7 @@ import gcmdlang._
 
 object PassiveIRPass {
 
-  def versionVar(varname: String, version: Int) = IntVar(varname + version.toString)
+  def versionVar(varname: String, version: Int): IntVar = IntVar(varname + version.toString)
 
   def updateIntExpr(expr: Expr[Int], versionMap : Map[String, Int]): Expr[Int] = expr match {
     case lit: Lit[Int] => lit
@@ -69,7 +69,7 @@ object PassiveIRPass {
     }
     else {
       val delta = secondMap filter (entry => {
-        (entry._2 != firstMap(entry._1))
+        entry._2 != firstMap(entry._1)
       })
       freshMap = secondMap
       delta.foreachEntry((k, v) => {
@@ -90,23 +90,22 @@ object PassiveIRPass {
   }
 
   def passifyStmtList(list: List[Stmt], versionMap: Map[String, Int]): (List[Stmt], Map[String, Int]) = list match {
-    case ::(head, next) => {
+    case ::(head, next) =>
       val (newHeadStmt, newMap) = passifyStmt(head, versionMap)
       val (newTail, tailVersionMap) = passifyStmtList(next, newMap)
       (List(newHeadStmt) ++ newTail, tailVersionMap)
-    }
     case Nil =>(List.empty[Stmt], versionMap)
   }
 
-  def initversionMap(prog: List[Stmt]): Map[String, Int] =
+  def initVersionMap(prog: List[Stmt]): Map[String, Int] =
     prog match {
       case ::(head, next) => (head match {
-        case AssignStmt(intVar, right) => Map(intVar.name -> 0)
+        case AssignStmt(intVar, _) => Map(intVar.name -> 0)
         case VarDeclStmt(varname) => Map(varname -> 0)
-        case IfStmt(_, ifTrue, ifFalse) => initversionMap(ifTrue) ++ initversionMap(ifFalse)
-        case WhileStmt(_, whileBody) => initversionMap(whileBody)
-        case _ => initversionMap(next)
-      }) ++ initversionMap(next)
+        case IfStmt(_, ifTrue, ifFalse) => initVersionMap(ifTrue) ++ initVersionMap(ifFalse)
+        case WhileStmt(_, whileBody) => initVersionMap(whileBody)
+        case _ => initVersionMap(next)
+      }) ++ initVersionMap(next)
 
       case Nil => Map.empty
     }

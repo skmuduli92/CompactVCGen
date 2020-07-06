@@ -1,10 +1,10 @@
 
 import gcmdlang._
 
-object CommandIR {
+object CommandIRPass {
 
   def transform(prog : List[Stmt]): List[Stmt] = {
-    prog.map(stmt => stmt match {
+    prog.map {
       case IfStmt(cond, ifTrue, ifFalse) => NonDet(
         List(AssumeStmt(cond)) ++ transform(ifTrue),
         List(AssumeStmt(Not(cond))) ++ transform(ifFalse)
@@ -13,7 +13,7 @@ object CommandIR {
       case assertStmt: AssertStmt => assertStmt
       case whileStmt: WhileStmt => whileStmt
       case assignStmt: AssignStmt => assignStmt
-      case nonDet: NonDet => nonDet 
-    })
+      case nonDet: NonDet => nonDet
+    }
   }
 }

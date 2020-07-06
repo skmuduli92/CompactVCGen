@@ -8,7 +8,7 @@ object Interpreter {
   // list of statements
   var program : List[Stmt] = List.empty
 
-  def addStmt(stmt: Stmt) = {
+  def addStmt(stmt: Stmt): Unit = {
     program = program ++ List(stmt)
   }
 
@@ -37,11 +37,11 @@ object Interpreter {
 
   // evaluate Boolean expressions
 
-  def evalAssignStmt(assign: AssignStmt) = {
+  def evalAssignStmt(assign: AssignStmt): Unit = {
     SymbolTable = SymbolTable + (assign.varname -> Lit(evalIntExpr(assign.right)))
   }
 
-  def evalVarDeclStmt(declStmt: VarDeclStmt) = {
+  def evalVarDeclStmt(declStmt: VarDeclStmt): Unit = {
     SymbolTable = SymbolTable + (declStmt.varname -> Lit(0))
   }
 
@@ -66,10 +66,10 @@ object Interpreter {
     case whileStmt: WhileStmt => evalWhileStmt(whileStmt)
   }
 
-  def execute: Unit = {
+  def execute(): Unit = {
     program.foreach( stmt => executeStmt(stmt))
   }
 
-  def valueOf(intVar: IntVar) = evalIntExpr(SymbolTable(intVar.name))
+  def valueOf(intVar: IntVar): Int = evalIntExpr(SymbolTable(intVar.name))
 
 }
