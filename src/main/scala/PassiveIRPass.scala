@@ -58,15 +58,28 @@ object PassiveIRPass {
   def passifyNonDetStmt(nonDet: NonDet, versionMap: Map[String, Int]) : (NonDet, Map[String, Int]) = {
     var (firstList, firstMap) = passifyStmtList(nonDet.first, versionMap)
     var (secondList, secondMap) = passifyStmtList(nonDet.second, firstMap)
+    var freshMap = Map.empty[String, Int]
 
-    val delta = secondMap filter (entry => { (entry._2 != firstMap(entry._1)) })
-    delta.foreachEntry((k,v) => {
-      firstList = firstList ++ List(AssignStmt(versionVar(k, v+1), versionVar(k, firstMap(k))))
-      secondList = secondList ++ List(AssignStmt(versionVar(k, v+1), versionVar(k, secondMap(k))))
-      secondMap = secondMap + (k -> (secondMap(k) + 1))
-    })
+    // TODO : write tests for each of the below conditions
+    if (firstMap.isEmpty) {
+      freshMap = secondMap
+    }
+    else if (secondMap.isEmpty) {
+      freshMap = firstMap
+    }
+    else {
+      val delta = secondMap filter (entry => {
+        (entry._2 != firstMap(entry._1))
+      })
+      freshMap = secondMap
+      delta.foreachEntry((k, v) => {
+        firstList = firstList ++ List(AssignStmt(versionVar(k, v + 1), versionVar(k, firstMap(k))))
+        secondList = secondList ++ List(AssignStmt(versionVar(k, v + 1), versionVar(k, secondMap(k))))
+        freshMap = freshMap + (k -> (freshMap(k) + 1))
+      })
+    }
 
-    (NonDet(firstList, secondList), secondMap)
+    (NonDet(firstList, secondList), freshMap)
   }
 
   def passifyStmt(stmt: Stmt, versionMap: Map[String, Int]): (Stmt, Map[String, Int]) = stmt match {
