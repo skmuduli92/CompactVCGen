@@ -47,12 +47,12 @@ object PassiveIRPass {
     }
 
 
-  def passifyAssignStmt(assignStmt: AssignStmt, versionMap: Map[String, Int]): (AssignStmt, Map[String, Int]) = {
+  def passifyAssignStmt(assignStmt: AssignStmt, versionMap: Map[String, Int]): (AssumeStmt, Map[String, Int]) = {
     val newVersion = versionMap(assignStmt.varname) + 1
     val freshVar = versionVar(assignStmt.varname, newVersion)
     val newversionMap = versionMap + (assignStmt.varname -> newVersion)
     val newExpr = updateIntExpr(assignStmt.right, versionMap)
-    (AssignStmt(freshVar, newExpr), newversionMap)
+    (AssumeStmt(Equal(freshVar, newExpr)), newversionMap)
   }
 
   def passifyNonDetStmt(nonDet: NonDet, versionMap: Map[String, Int]) : (NonDet, Map[String, Int]) = {
