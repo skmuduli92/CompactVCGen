@@ -73,8 +73,8 @@ object PassiveIRPass {
       })
       freshMap = secondMap
       delta.foreachEntry((k, v) => {
-        firstList = firstList ++ List(AssignStmt(versionVar(k, v + 1), versionVar(k, firstMap(k))))
-        secondList = secondList ++ List(AssignStmt(versionVar(k, v + 1), versionVar(k, secondMap(k))))
+        firstList = firstList ++ List(AssumeStmt(Equal(versionVar(k, v + 1), versionVar(k, firstMap(k)))))
+        secondList = secondList ++ List(AssumeStmt(Equal(versionVar(k, v + 1), versionVar(k, secondMap(k)))))
         freshMap = freshMap + (k -> (freshMap(k) + 1))
       })
     }
