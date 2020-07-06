@@ -51,8 +51,22 @@ object PassiveIRPass {
     val newVersion = versionMap(assignStmt.varname) + 1
     val freshVar = versionVar(assignStmt.varname, newVersion)
     val newversionMap = versionMap + (assignStmt.varname -> newVersion)
-    val newExpr = updateIntExpr(assignStmt.right, newversionMap)
+    val newExpr = updateIntExpr(assignStmt.right, versionMap)
     (AssignStmt(freshVar, newExpr), newversionMap)
+  }
+
+  def passifyNonDetStmt(nonDet: NonDet, versionMap: Map[String, Int]) : (NonDet, Map[String, Int]) = {
+    var (firstList, firstMap) = passifyStmtList(nonDet.first, versionMap)
+    var (secondList, secondMap) = passifyStmtList(nonDet.second, firstMap)
+
+    val delta = secondMap filter (entry => { (entry._2 != firstMap(entry._1)) })
+    delta.foreachEntry((k,v) => {
+      firstList = firstList ++ List(AssignStmt(versionVar(k, v+1), versionVar(k, firstMap(k))))
+      secondList = secondList ++ List(AssignStmt(versionVar(k, v+1), versionVar(k, secondMap(k))))
+      secondMap = secondMap + (k -> (secondMap(k) + 1))
+    })
+
+    (NonDet(firstList, secondList), secondMap)
   }
 
   def passifyStmt(stmt: Stmt, versionMap: Map[String, Int]): (Stmt, Map[String, Int]) = stmt match {
@@ -70,17 +84,6 @@ object PassiveIRPass {
     }
     case Nil =>(List.empty[Stmt], versionMap)
   }
-
-  def passifyNonDetStmt(nonDet: NonDet, versionMap: Map[String, Int]) : (NonDet, Map[String, Int]) = {
-    val (firstList, firstMap) = passifyStmtList(nonDet.first, versionMap)
-    val (secondList, secondMap) = passifyStmtList(nonDet.second, firstMap)
-    // TODO:
-    //  1. Find diff map for first and second map
-    //  2. update firstList and secondList accordingly
-    (NonDet(firstList, secondList), secondMap)
-  }
-
-
 
   def initversionMap(prog: List[Stmt]): Map[String, Int] =
     prog match {
